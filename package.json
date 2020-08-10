@@ -1,0 +1,23 @@
+{
+  "name": "blockchain-P8",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/PuertOcho/blockchain-P8.git",
+  "author": "PuertOcho <antoniopuerto8@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "devDependencies": {
+    "@babel/core": "^7.11.1",
+    "@babel/node": "^7.10.5",
+    "@babel/preset-env": "^7.11.0",
+    "eslint": "^7.6.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.0",
+    "nodemon": "^2.0.4"
+  },
+  "scripts": {
+    "start": "babel-node index",
+    "nodemon": "nodemon --exec yarn start",
+    "lint": "eslint index.js src"
+  }
+}
