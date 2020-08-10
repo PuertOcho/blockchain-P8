@@ -13,11 +13,22 @@
     "eslint": "^7.6.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-import": "^2.22.0",
+    "jest": "^26.2.2",
     "nodemon": "^2.0.4"
   },
   "scripts": {
     "start": "babel-node index",
     "nodemon": "nodemon --exec yarn start",
-    "lint": "eslint index.js src"
+    "lint": "eslint index.js src",
+    "test": "jest",
+    "test:watch": "jest --watchAll"
+  },
+  "dependencies": {
+    "crypto-js": "^4.0.0"
+  },
+  "jest": {
+    "silent": false,
+    "verbose": true,
+    "testEnvironment": "node"
   }
 }
