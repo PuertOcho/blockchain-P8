@@ -41,3 +41,4 @@ describe('validate()', () => {
     }).toThrowError('Invalid hash.');
   });
 });
+
