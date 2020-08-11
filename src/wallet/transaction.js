@@ -1,6 +1,8 @@
 import {v1 as uuidv1} from 'uuid';
 import { elliptic } from '../modules';
 
+const REWARD = 1;
+
 class Transaction {
   constructor() {
     this.id = uuidv1();
@@ -19,14 +21,13 @@ class Transaction {
       { amount, address: recipientAdress },
     ]);
 
-    transaction.input = {
-      timestamp: Date.now(),
-      amount: senderWallet.balance,
-      address: senderWallet.publicKey,
-      signature: senderWallet.sign(transaction.outputs),
-    };
+    transaction.input = Transaction.sign(transaction, senderWallet);
 
     return transaction;
+  }
+
+  static reward(minerWallet, blockchainWallet) {
+    return this.create(blockchainWallet, minerWallet.publicKey, REWARD);
   }
 
   static verify(transaction) {
@@ -34,6 +35,29 @@ class Transaction {
 
     return elliptic.verifySignature(address, signature, outputs);
   }
+
+  static sign(transaction, senderWallet) {
+    return {
+      timestamp: Date.now(),
+      amount: senderWallet.balance,
+      address: senderWallet.publicKey,
+      signature: senderWallet.sign(transaction.outputs),
+    };
+  }
+
+  update(senderWallet, recipientAdress, amount) {
+    const senderOutput = this.outputs.find((output) => output.address === senderWallet.publicKey);
+
+    if (amount > senderOutput.amount) throw Error(`Amount: ${amount} exceeds balance`);
+
+    senderOutput.amount -= amount;
+    this.outputs.push({ amount, address: recipientAdress });
+    this.input = Transaction.sign(this, senderWallet);
+
+    return this;
+  }
 }
+
+export { REWARD };
 
 export default Transaction;
