@@ -4,7 +4,7 @@ export default (blockchain) => {
   const [genesisBlock, ...blocks] = blockchain;
 
   if (JSON.stringify(genesisBlock) !== JSON.stringify(Block.genesis)) throw Error('Invalid Genesis block.');
-
+I
   for (let i = 0; i < blocks.length; i += 1) {
     const {
       previousHash, timestamp, hash, data, nonce, difficulty
