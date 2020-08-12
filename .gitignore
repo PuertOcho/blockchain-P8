@@ -1,9 +1,4 @@
 # gitignore
-<<<<<<< HEAD
 node_modules/
-
-=======
-node_modules
->>>>>>> 657695b4d33034b09fec7c394aeb893655183529
 yarn.lock
 yarn-error.log
