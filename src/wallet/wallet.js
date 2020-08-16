@@ -71,6 +71,13 @@ class Wallet {
 
     return balance;
   }
+
+
+  static get PublicKey() {
+    
+    return this.publicKey;
+  
+  }
 }
 
 export { INITIAL_BALANCE };

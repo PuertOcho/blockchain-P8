@@ -1,12 +1,15 @@
 import WebSocket from 'ws';
+import Nodo from '../blockchain'
+import Wallet from '../wallet';
+
 
 const { P2P_PORT = 5000, PEERS } = process.env;
 const peers = PEERS ? PEERS.split(',') : [];
 const MESSAGE = {
   BLOCKS: 'blocks',
   TX: 'transaction',
-  WIPE: 'wipe_memorypool',
-};
+  WIPE: 'wipe_memorypool'
+,};
 
 class P2PService {
   constructor(blockchain) {
@@ -15,6 +18,7 @@ class P2PService {
   }
 
   listen() {
+
     const server = new WebSocket.Server({ port: P2P_PORT });
     server.on('connection', (socket) => this.onConnection(socket));
 
@@ -53,6 +57,7 @@ class P2PService {
   }
 
   broadcast(type, value) {
+
     console.log(`[ws:broadcast] ${type}...`);
     const message = JSON.stringify({ type, value });
     this.sockets.forEach((socket) => socket.send(message));

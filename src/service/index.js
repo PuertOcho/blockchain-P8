@@ -6,6 +6,10 @@ import Wallet from '../wallet';
 import P2PService, { MESSAGE } from './p2p';
 import Miner from '../miner';
 
+import Nodo from '../blockchain/nodo.js';
+
+
+
 const { HTTP_PORT = 3000 } = process.env;
 
 const app = express();
@@ -15,10 +19,22 @@ const walletMiner = new Wallet(blockchain, 0);
 const p2pService = new P2PService(blockchain);
 const miner = new Miner(blockchain, p2pService, walletMiner);
 
+const nodo = new Nodo( wallet );
+
+//console.log(nodo.toString()); //<---------------- prueba
+
 app.use(bodyParser.json());
 
 app.get('/blocks', (req, res) => {
   res.json(blockchain.blocks);
+});
+
+app.get('/wallet', (req, res) => {
+  res.json(wallet.toString());
+});
+
+app.get('/nodo', (req, res) => {
+  res.json( nodo.toString() );
 });
 
 app.post('/mine', (req, res) => {
@@ -58,6 +74,7 @@ app.get('/mine/transactions', (req, res) => {
     res.json({ error: error.message });
   }
 });
+
 
 app.listen(HTTP_PORT, () => {
   console.log(`Service HTTP:${HTTP_PORT} listening...`);
