@@ -26,7 +26,13 @@ const nodo = new Nodo( wallet );
 app.use(bodyParser.json());
 
 app.get('/blocks', (req, res) => {
+  p2pService.sync();
   res.json(blockchain.blocks);
+});
+
+app.get('/nodos', (req, res) => {
+  //p2pService.sync();
+  res.json(p2pService.sockets);
 });
 
 app.get('/wallet', (req, res) => {
@@ -37,6 +43,7 @@ app.get('/nodo', (req, res) => {
   res.json( nodo.toString() );
 });
 
+//de momento inactivo por que utilizamos transacciones para minar
 app.post('/mine', (req, res) => {
   const { body: { data } } = req;
   const block = blockchain.addBlock(data);

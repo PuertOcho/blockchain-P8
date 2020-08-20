@@ -49,4 +49,23 @@ describe('Blockchain', () => {
       blockchain.replace(blockchainB.blocks);
     }).toThrowError('Received chain is invalid');
   });
+
+  it('añade un nodo con addNodo', () => {
+
+    blockchain.addNodo('nodo1');
+    expect (blockchain.nodos.length).toEqual(1);
+
+  });
+
+  it('replaceNodo', () => {
+    
+    blockchain.replaceNodos('nodo1');
+    expect (blockchain.nodos[0]).toEqual('nodo1');
+
+    blockchain.replaceNodos('nodo1');
+    expect (blockchain.nodos[0]).toEqual('nodo1');
+
+  });
+
+  
 });
