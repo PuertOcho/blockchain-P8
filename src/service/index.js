@@ -16,10 +16,11 @@ const app = express();
 const blockchain = new Blockchain();
 const wallet = new Wallet(blockchain);
 const walletMiner = new Wallet(blockchain, 0);
-const p2pService = new P2PService(blockchain);
+const nodo = new Nodo( wallet );
+const p2pService = new P2PService(blockchain, nodo);
 const miner = new Miner(blockchain, p2pService, walletMiner);
 
-const nodo = new Nodo( wallet );
+
 
 //console.log(nodo.toString()); //<---------------- prueba
 

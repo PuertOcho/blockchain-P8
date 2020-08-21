@@ -4,7 +4,12 @@ import Wallet from '../wallet';
 
 
 const { P2P_PORT = 5000, PEERS } = process.env;
-const peers = PEERS ? PEERS.split(',') : [];
+const peers = PEERS ? PEERS.split(',') : [`ws:localhost:${ P2P_PORT }`];
+
+
+
+
+
 const MESSAGE = {
   BLOCKS: 'blocks',
   TX: 'transaction',
@@ -14,11 +19,16 @@ const MESSAGE = {
 
 
 class P2PService {
-  constructor(blockchain) {
+  constructor(blockchain, nodo) {
     this.blockchain = blockchain;
-    this.sockets = [`ws:localhost:${ P2P_PORT }`];
+    this.sockets = [nodo];
+    //peers.push(nodo.socket);
+
+    //console.log("este es el nuevo nodo: ", nodo);
     //this.sockets = [];
   }
+
+//if(P2PService.sockets[0] != "ws:localhost:5000") console.log('Hola');
 
 /* ORIGINAL
 
@@ -82,7 +92,7 @@ onConnection(socket) {
         if (type === MESSAGE.BLOCKS) blockchain.replace(value);
         else if (type === MESSAGE.TX) blockchain.memoryPool.addOrUpdate(value);
         else if (type === MESSAGE.WIPE) blockchain.memoryPool.wipe();
-        else if (type === MESSAGE.NODOS) {this.replaceSockets(value); console.log('value: ',value);console.log('this.sockets: ',this.sockets);} //puesto por mi para pruebas
+        else if (type === MESSAGE.NODOS) { console.log('this.sockets: ',this.sockets); this.replaceSockets(value); } //console.log('value: ',value);console.log('this.sockets: ',this.sockets);
       } catch (error) {
         console.log(`[ws:message] error ${error}`);
         throw Error(error);
@@ -94,7 +104,7 @@ onConnection(socket) {
     socket.send(JSON.stringify({ type: MESSAGE.BLOCKS, value: blockchain.blocks }));
     socket.send(JSON.stringify({ type: MESSAGE.NODOS, value: this.sockets }));
 
-    console.log('this.sockets: ',this.sockets);
+    //console.log('this.sockets: ',this.sockets);
   }
 
   sync() {
@@ -130,16 +140,23 @@ onConnection(socket) {
     
     newSockets.forEach((peer) => {
     
-      if (this.sockets.includes(peer) == false){
-        this.sockets.push(peer);
-        peers.push(peer);
+      //console.log("peer1: ",peer);
+      //console.log("peers: ",peers);
 
-        const socket = new WebSocket(peer);
+      //if (!peers.includes(peer)){
+      console.log(`peers: ${JSON.stringify(peers)}, peer: ${JSON.stringify(peer)}, Bol: ${peers.includes(peer.socket)}`);
+
+      if (!peers.includes(peer.socket)){
+        this.sockets.push(peer);
+        peers.push(peer.socket);
+        
+        const socket = new WebSocket(peer.socket);
         socket.on('open', () => this.onConnection(socket));
-      } 
+
+      }
     });
     
-
+  console.log("--------------------------------------------------------------------------------------------------");
     return this.sockets;
   }
 

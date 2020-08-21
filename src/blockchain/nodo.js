@@ -7,9 +7,8 @@ const { P2P_PORT = 5000 } = process.env;
 class Nodo {
 	constructor( wallet ) {
 
-	this.publicKey2 = wallet.publicKey;
   this.socket = `ws:localhost:${ P2P_PORT }`;
-  
+	this.publicKey2 = wallet.publicKey;
 }
 
 
