@@ -1,10 +1,11 @@
 import WebSocket from 'ws';
 import Nodo from '../blockchain'
+import Peer from '../blockchain'
 import Wallet from '../wallet';
 
 
 const { P2P_PORT = 5000, PEERS } = process.env;
-const peers = PEERS ? PEERS.split(',') : [];
+
 const MESSAGE = {
   BLOCKS: 'blocks',
   TX: 'transaction',
@@ -16,8 +17,11 @@ const MESSAGE = {
 class P2PService {
   constructor(blockchain) {
     this.blockchain = blockchain;
-    this.sockets = [`ws:localhost:${ P2P_PORT }`];
-    //this.sockets = [];
+    //this.sockets = [`ws:localhost:${ P2P_PORT }`];
+    this.sockets = [];
+    this.setPeers = [];
+    this.peers = PEERS ? PEERS.split(',') : [];
+    
   }
 
 /* ORIGINAL
@@ -40,7 +44,7 @@ class P2PService {
     const server = new WebSocket.Server({ port: P2P_PORT });
     server.on('connection', (socket) => this.onConnection(socket));
 
-    peers.forEach((peer) => {
+    this.peers.forEach((peer) => {
       const socket = new WebSocket(peer);
       socket.on('open', () => this.onConnection(socket));
     });
@@ -74,7 +78,7 @@ onConnection(socket) {
     const { blockchain } = this;
     //blockchain.nodos.push(`ws:localhost:${ P2P_PORT }`);
     console.log('[ws:socket] connected.');
-    //this.sockets.push(socket);
+    this.sockets.push(socket);
     socket.on('message', (message) => {
       const { type, value } = JSON.parse(message);
 
@@ -82,7 +86,7 @@ onConnection(socket) {
         if (type === MESSAGE.BLOCKS) blockchain.replace(value);
         else if (type === MESSAGE.TX) blockchain.memoryPool.addOrUpdate(value);
         else if (type === MESSAGE.WIPE) blockchain.memoryPool.wipe();
-        else if (type === MESSAGE.NODOS) {this.replaceSockets(value); console.log('value: ',value);console.log('this.sockets: ',this.sockets);} //puesto por mi para pruebas
+        else if (type === MESSAGE.NODOS) {console.log('value: ',value);console.log('this.peers: ',this.peers);this.replacePeers(value); } //puesto por mi para pruebas
       } catch (error) {
         console.log(`[ws:message] error ${error}`);
         throw Error(error);
@@ -92,7 +96,8 @@ onConnection(socket) {
 
 
     socket.send(JSON.stringify({ type: MESSAGE.BLOCKS, value: blockchain.blocks }));
-    socket.send(JSON.stringify({ type: MESSAGE.NODOS, value: this.sockets }));
+    socket.send(JSON.stringify({ type: MESSAGE.NODOS, value: this.peers }));
+    
 
     console.log('this.sockets: ',this.sockets);
   }
@@ -101,7 +106,7 @@ onConnection(socket) {
     const { blockchain: { blocks } } = this;
     //const { P2PService: { sockets } } = this; // añadido para sincronizar todos lo nodos
     this.broadcast(MESSAGE.BLOCKS, blocks);
-    this.broadcast(MESSAGE.NODOS, this.sockets);
+    this.broadcast(MESSAGE.NODOS, this.peers);
   }
 
   broadcast(type, value) {
@@ -126,21 +131,21 @@ onConnection(socket) {
     return this.blocks;
 }*/
 
-  replaceSockets( newSockets ){
+  replacePeers( newPeers ){
     
-    newSockets.forEach((peer) => {
+    newPeers.forEach((peer) => {
     
-      if (this.sockets.includes(peer) == false){
-        this.sockets.push(peer);
-        peers.push(peer);
+      if (this.peers.includes(peer) == false){
+        this.peers.push(peer);
 
         const socket = new WebSocket(peer);
         socket.on('open', () => this.onConnection(socket));
       } 
     });
     
+  //if (this.peers[0].socket != 'ws:localhost:5000' && Nodo.socket =='ws:localhost:5000'){  peers.splice(0,1);peers.push(`ws:localhost:${P2P_PORT}`);  }  //peers.splice(0,1);
 
-    return this.sockets;
+    //return this.sockets;
   }
 
 

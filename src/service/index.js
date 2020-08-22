@@ -11,6 +11,7 @@ import Nodo from '../blockchain/nodo.js';
 
 
 const { HTTP_PORT = 3000 } = process.env;
+const { P2P_PORT = 5000, PEERS } = process.env;
 
 const app = express();
 const blockchain = new Blockchain();
@@ -23,16 +24,22 @@ const nodo = new Nodo( wallet );
 
 //console.log(nodo.toString()); //<---------------- prueba
 
+if(p2pService.peers[0] == `ws:localhost:5000`){
+  p2pService.peers.push(`ws:localhost:${ P2P_PORT }`);
+}
+
+////
+
 app.use(bodyParser.json());
 
 app.get('/blocks', (req, res) => {
-  p2pService.sync();
+  //p2pService.sync();
   res.json(blockchain.blocks);
 });
 
 app.get('/nodos', (req, res) => {
   //p2pService.sync();
-  res.json(p2pService.sockets);
+  res.json(p2pService.peers);
 });
 
 app.get('/wallet', (req, res) => {
