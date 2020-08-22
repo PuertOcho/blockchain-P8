@@ -57,7 +57,9 @@ app.get('/nodo', (req, res) => {
   res.json( nodo.toString() );
 });
 
+
 //de momento inactivo por que utilizamos transacciones para minar
+/*
 app.post('/mine', (req, res) => {
   const { body: { data } } = req;
   const block = blockchain.addBlock(data);
@@ -69,6 +71,7 @@ app.post('/mine', (req, res) => {
     block,
   });
 });
+*/
 
 app.get('/transactions', (req, res) => {
   const { memoryPool: { transactions } } = blockchain;

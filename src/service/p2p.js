@@ -98,43 +98,26 @@ class P2PService {
   }
 
   replaceSetPeers( newSetPeers ){
-      
-    //console.log("--------------------------------------------------------------------------------------------------");
-    //console.log( Object.values(this.setPeers[0]));
-    
 
     const laux = [];
     
-
+    //actualizamos las claves publicas que hallan cambiado, asociadas a un Peer y añadimos una lista que nos indicara si este elemento se encuentra en la lista o no.
     for (let i = 0; i < this.setPeers.length ; i++) {
-
       laux.push(this.setPeers[i][0]);
-      
+
+      if( (this.setPeers[i][0] == newSetPeers[0][0]) && (this.setPeers[i][1] != newSetPeers[0][1])){ 
+        this.setPeers[i][1] = newSetPeers[0][1];
+      }
     }
 
-console.log(`newSetPeers: ${ newSetPeers[0][0] }`);
-console.log(`laux: ${ laux }`);
-
-
-    
-
     if(laux.includes(newSetPeers[0][0]) == false){
+
       this.setPeers.push(newSetPeers[0]);
         
     }
 
-      //if( !this.setPeers.includes(newSetPeers[i]){}
-
-      //console.log(`this.setPeers: ${JSON.stringify(this.setPeers)}`);
-      //console.log(`peer: ${JSON.stringify( newSetPeers[i])}`);
-      //console.log(  !this.setPeers.includes(newSetPeers[i]) );
-        //this.setPeers.push((newSetPeers[i]));
-      
-//console.log(`this.setPeers: ${JSON.stringify( this.setPeers.length })`);
-
-    
-
   }
+  
 
 }
 
