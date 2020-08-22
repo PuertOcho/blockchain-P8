@@ -17,9 +17,9 @@ const app = express();
 const blockchain = new Blockchain();
 const wallet = new Wallet(blockchain);
 const walletMiner = new Wallet(blockchain, 0);
-const nodo = new Nodo( wallet );
-const p2pService = new P2PService(blockchain, nodo);
+const p2pService = new P2PService(blockchain);
 const miner = new Miner(blockchain, p2pService, walletMiner);
+const nodo = new Nodo( wallet );
 
 
 
@@ -34,12 +34,12 @@ if(p2pService.peers[0] == `ws:localhost:5000`){
 app.use(bodyParser.json());
 
 app.get('/blocks', (req, res) => {
-  //p2pService.sync();
+  p2pService.sync();
   res.json(blockchain.blocks);
 });
 
 app.get('/nodos', (req, res) => {
-  //p2pService.sync();
+  p2pService.sync();
   res.json(p2pService.peers);
 });
 

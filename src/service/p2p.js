@@ -6,11 +6,6 @@ import Wallet from '../wallet';
 
 const { P2P_PORT = 5000, PEERS } = process.env;
 
-const peers = PEERS ? PEERS.split(',') : [`ws:localhost:${ P2P_PORT }`];
-
-
-
-
 const MESSAGE = {
   BLOCKS: 'blocks',
   TX: 'transaction',
@@ -27,7 +22,7 @@ class P2PService {
     this.setPeers = [];
     this.peers = PEERS ? PEERS.split(',') : [];
     
-    this.sockets = [nodo];
+    
     //peers.push(nodo.socket);
 
     //console.log("este es el nuevo nodo: ", nodo);
@@ -99,9 +94,6 @@ onConnection(socket) {
         else if (type === MESSAGE.TX) blockchain.memoryPool.addOrUpdate(value);
         else if (type === MESSAGE.WIPE) blockchain.memoryPool.wipe();
         else if (type === MESSAGE.NODOS) {console.log('value: ',value);console.log('this.peers: ',this.peers);this.replacePeers(value); } //puesto por mi para pruebas
-
-        else if (type === MESSAGE.NODOS) { console.log('this.sockets: ',this.sockets); this.replaceSockets(value); } //console.log('value: ',value);console.log('this.sockets: ',this.sockets);
-
       } catch (error) {
         console.log(`[ws:message] error ${error}`);
         throw Error(error);
@@ -146,29 +138,16 @@ onConnection(socket) {
     return this.blocks;
 }*/
 
-  replacePeers( newPeers ){
+   replacePeers( newPeers ){
     
     newPeers.forEach((peer) => {
     
-
       if (this.peers.includes(peer) == false){
         this.peers.push(peer);
 
-      //console.log("peer1: ",peer);
-      //console.log("peers: ",peers);
-
-      //if (!peers.includes(peer)){
-      console.log(`peers: ${JSON.stringify(peers)}, peer: ${JSON.stringify(peer)}, Bol: ${peers.includes(peer.socket)}`);
-
-
-      if (!peers.includes(peer.socket)){
-        this.sockets.push(peer);
-        peers.push(peer.socket);
-        
-        const socket = new WebSocket(peer.socket);
+        const socket = new WebSocket(peer);
         socket.on('open', () => this.onConnection(socket));
-        }
-      }
+      } 
     });
     
 
