@@ -8,17 +8,17 @@ class Nodo {
 	constructor( wallet ) {
 
   this.socket = `ws:localhost:${ P2P_PORT }`;
-	this.publicKey2 = wallet.publicKey;
+	this.publicKey = wallet.publicKey;
 }
 
 
 
   toString() {
     const {
-      publicKey2, socket,
+      publicKey, socket,
     } = this;
 
-    return `${socket}  : ${publicKey2.toString()}
+    return `${socket}  : ${publicKey.toString()}
     `;
   }
 
