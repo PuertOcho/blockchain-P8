@@ -5,14 +5,11 @@ import Wallet from '../wallet';
 
 
 const { P2P_PORT = 5000, PEERS } = process.env;
-<<<<<<< HEAD
-=======
+
 const peers = PEERS ? PEERS.split(',') : [`ws:localhost:${ P2P_PORT }`];
 
 
 
-
->>>>>>> fe097f6f4a45217bd53e8011ca65141e7444eb34
 
 const MESSAGE = {
   BLOCKS: 'blocks',
@@ -25,19 +22,16 @@ const MESSAGE = {
 class P2PService {
   constructor(blockchain, nodo) {
     this.blockchain = blockchain;
-<<<<<<< HEAD
     //this.sockets = [`ws:localhost:${ P2P_PORT }`];
     this.sockets = [];
     this.setPeers = [];
     this.peers = PEERS ? PEERS.split(',') : [];
     
-=======
     this.sockets = [nodo];
     //peers.push(nodo.socket);
 
     //console.log("este es el nuevo nodo: ", nodo);
     //this.sockets = [];
->>>>>>> fe097f6f4a45217bd53e8011ca65141e7444eb34
   }
 
 //if(P2PService.sockets[0] != "ws:localhost:5000") console.log('Hola');
@@ -104,11 +98,10 @@ onConnection(socket) {
         if (type === MESSAGE.BLOCKS) blockchain.replace(value);
         else if (type === MESSAGE.TX) blockchain.memoryPool.addOrUpdate(value);
         else if (type === MESSAGE.WIPE) blockchain.memoryPool.wipe();
-<<<<<<< HEAD
         else if (type === MESSAGE.NODOS) {console.log('value: ',value);console.log('this.peers: ',this.peers);this.replacePeers(value); } //puesto por mi para pruebas
-=======
+
         else if (type === MESSAGE.NODOS) { console.log('this.sockets: ',this.sockets); this.replaceSockets(value); } //console.log('value: ',value);console.log('this.sockets: ',this.sockets);
->>>>>>> fe097f6f4a45217bd53e8011ca65141e7444eb34
+
       } catch (error) {
         console.log(`[ws:message] error ${error}`);
         throw Error(error);
@@ -157,16 +150,16 @@ onConnection(socket) {
     
     newPeers.forEach((peer) => {
     
-<<<<<<< HEAD
+
       if (this.peers.includes(peer) == false){
         this.peers.push(peer);
-=======
+
       //console.log("peer1: ",peer);
       //console.log("peers: ",peers);
 
       //if (!peers.includes(peer)){
       console.log(`peers: ${JSON.stringify(peers)}, peer: ${JSON.stringify(peer)}, Bol: ${peers.includes(peer.socket)}`);
->>>>>>> fe097f6f4a45217bd53e8011ca65141e7444eb34
+
 
       if (!peers.includes(peer.socket)){
         this.sockets.push(peer);
@@ -174,18 +167,18 @@ onConnection(socket) {
         
         const socket = new WebSocket(peer.socket);
         socket.on('open', () => this.onConnection(socket));
-
+        }
       }
     });
     
-<<<<<<< HEAD
+
   //if (this.peers[0].socket != 'ws:localhost:5000' && Nodo.socket =='ws:localhost:5000'){  peers.splice(0,1);peers.push(`ws:localhost:${P2P_PORT}`);  }  //peers.splice(0,1);
 
     //return this.sockets;
-=======
+
   console.log("--------------------------------------------------------------------------------------------------");
     return this.sockets;
->>>>>>> fe097f6f4a45217bd53e8011ca65141e7444eb34
+
   }
 
 

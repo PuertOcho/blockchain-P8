@@ -23,13 +23,13 @@
     "start:4": "HTTP_PORT=3003 P2P_PORT=5003 PEERS=ws:localhost:5000 yarn start",
     "start:5": "HTTP_PORT=3004 P2P_PORT=5004 PEERS=ws:localhost:5000 yarn start",
     "start:6": "HTTP_PORT=3005 P2P_PORT=5005 PEERS=ws:localhost:5000 yarn start",
-<<<<<<< HEAD
+
     "start:8": "HTTP_PORT=3006 P2P_PORT=5006 PEERS=ws:localhost:5000 yarn start",
     "start:9": "HTTP_PORT=3007 P2P_PORT=5007 PEERS=ws:localhost:5000 yarn start",
-=======
+
     "start:7": "HTTP_PORT=3006 P2P_PORT=5006 PEERS=ws:localhost:5000 yarn start",
     "start:8": "HTTP_PORT=3007 P2P_PORT=5007 PEERS=ws:localhost:5000 yarn start",
->>>>>>> fe097f6f4a45217bd53e8011ca65141e7444eb34
+
     "nodemon": "nodemon --exec yarn start",
     "lint": "eslint index.js src",
     "test": "jest",
