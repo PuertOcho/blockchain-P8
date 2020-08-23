@@ -6,7 +6,7 @@ class Blockchain {
   constructor() {
     this.blocks = [Block.genesis];
     this.memoryPool = new MemoryPool();
-    //this.nodos = [];
+
   }
 
   addBlock(data) {
@@ -20,7 +20,9 @@ class Blockchain {
 
 
   replace(newBlocks = []) {
-    //if (newBlocks.length < this.blocks.length) throw Error('Received chain is not longer than current chain.');//
+    
+    //if (newBlocks.length < this.blocks.length) throw Error('Received chain is not longer than current chain.');
+    
     try {
       validate(newBlocks);
     } catch (error) {

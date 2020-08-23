@@ -42,11 +42,10 @@ class P2PService {
 
   onConnection(socket) {
     const { blockchain } = this;
-    //blockchain.nodos.push(`ws:localhost:${ P2P_PORT }`);
     console.log('[ws:socket] connected.');
     this.sockets.push(socket);
     socket.on('message', (message) => {
-      const { type, value } = JSON.parse(message);
+    const { type, value } = JSON.parse(message);
 
       try {
         if (type === MESSAGE.BLOCKS) blockchain.replace(value);
@@ -115,9 +114,8 @@ class P2PService {
       this.setPeers.push(newSetPeers[0]);
         
     }
-
   }
-  
+
 
 }
 

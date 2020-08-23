@@ -7,7 +7,7 @@ export default (blockchain) => {
 
   for (let i = 0; i < blocks.length; i += 1) {
     const {
-      previousHash, timestamp, hash, data, nonce, difficulty
+      previousHash, timestamp, hash, data, nonce, difficulty,
     } = blocks[i];
     const previousBlock = blockchain[i];
 

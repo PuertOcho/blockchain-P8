@@ -60,4 +60,5 @@ class Transaction {
 
 export { REWARD };
 
+
 export default Transaction;

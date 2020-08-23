@@ -24,13 +24,15 @@ const miner = new Miner(blockchain, p2pService, walletMiner);
 
 
 
-//console.log(nodo.toString()); //<---------------- prueba
+/////////////////////////////////////////////////////////////
+////  para poder inicializar el nodo principal
+/////////////////////////////////////////////////////////////
 
 if(p2pService.peers[0] == `ws:localhost:5000`){
   p2pService.peers.push(`ws:localhost:${ P2P_PORT }`);
 }
 
-////
+/////////////////////////////////////////////////////////////
 
 app.use(bodyParser.json());
 
@@ -50,6 +52,7 @@ app.get('/peers', (req, res) => {
 });
 
 app.get('/wallet', (req, res) => {
+  p2pService.sync();
   res.json(wallet.toString());
 });
 
@@ -79,6 +82,7 @@ app.get('/transactions', (req, res) => {
 });
 
 app.post('/transaction', (req, res) => {
+  p2pService.sync();
   const { body: { recipient, amount } } = req;
 
   try {
@@ -91,11 +95,13 @@ app.post('/transaction', (req, res) => {
 });
 
 app.get('/mine/transactions', (req, res) => {
+  p2pService.sync();
   try {
     miner.mine();
     res.redirect('/blocks');
   } catch (error) {
     res.json({ error: error.message });
+
   }
 });
 
