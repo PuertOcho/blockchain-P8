@@ -1,5 +1,6 @@
 import Transaction from './transaction';
 import { elliptic, hash } from '../modules';
+import Nodo from '../blockchain';
 
 const INITIAL_BALANCE = 100;
 
@@ -31,8 +32,9 @@ class Wallet {
     if (amount > currentBalance){ throw Error(`Amount: ${amount} exceds current balance: ${currentBalance}`);
     } else {
 
-      //this.balance = currentBalance;//añadido
       tx = Transaction.create(this, recipientAddress, amount);
+
+      this.balance-=amount;//añadido
       
       memoryPool.addOrUpdate(tx);
     }
@@ -72,6 +74,7 @@ class Wallet {
     
     return balance;
   }
+
 }
 
 export { INITIAL_BALANCE };

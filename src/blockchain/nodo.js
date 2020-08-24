@@ -9,19 +9,19 @@ class Nodo {
 
   this.socket = `ws:localhost:${ P2P_PORT }`;
 	this.publicKey = wallet.publicKey;
+  this.balance = wallet.balance;
 }
 
-
-
   toString() {
-    const {
-      publicKey, socket,
-    } = this;
+    const { socket, publicKey, balance } = this;
 
-    return `${socket}  : ${publicKey.toString()}
+    return ` Nodo -
+      socket        : ${socket}
+      publicKey     : ${publicKey.toString()}
+      balance       : ${balance}
     `;
   }
-
+  
 }
 
 export default Nodo;

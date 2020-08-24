@@ -99,7 +99,9 @@ class P2PService {
   replaceSetPeers( newSetPeers ){
 
     const laux = [];
+
     
+
     //actualizamos las claves publicas que hallan cambiado, asociadas a un Peer y añadimos una lista que nos indicara si este elemento se encuentra en la lista o no.
     for (let i = 0; i < this.setPeers.length ; i++) {
       laux.push(this.setPeers[i][0]);
@@ -107,6 +109,12 @@ class P2PService {
       if( (this.setPeers[i][0] == newSetPeers[0][0]) && (this.setPeers[i][1] != newSetPeers[0][1])){ 
         this.setPeers[i][1] = newSetPeers[0][1];
       }
+
+      if( (this.setPeers[i][0] == newSetPeers[0][0]) && (this.setPeers[i][2] != newSetPeers[0][2])){ 
+        
+        this.setPeers[i][2] = newSetPeers[0][2];
+      }
+      
     }
 
     if(laux.includes(newSetPeers[0][0]) == false){
