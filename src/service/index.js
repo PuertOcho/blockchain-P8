@@ -71,10 +71,25 @@ app.get('/wallet', (req, res) => {
   res.json(wallet.toString());
 });
 
+/*
 app.get('/nodo', (req, res) => {
   res.json( p2pService.myNodo );
 });
+*/
 
+app.post('/nodo', (req, res) => {
+  const { body: { publicKey } } = req;
+  
+  p2pService.sync();
+
+  try {
+    let nodo = p2pService.searchNodo( publicKey );
+    res.json(nodo);
+  } catch (error) {
+    res.json({ error: error.message });
+  }
+
+});
 
 //de momento inactivo por que utilizamos transacciones para minar
 /*

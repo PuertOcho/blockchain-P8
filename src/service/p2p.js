@@ -124,6 +124,38 @@ class P2PService {
     }
   }
 
+  searchNodo( targetPublickey ) {
+
+    let socket;
+    let publicKey;
+    let balance;
+    let idTransactions = [];
+  
+    this.setPeers.forEach((peer) => {
+      
+      if( peer[1] == targetPublickey ){
+        socket = peer[0];   publicKey = peer[1];    balance = peer[2];
+      } 
+        
+    });
+
+    for (let i = 0; i < this.blockchain.blocks.length; i++) {
+      let info = this.blockchain.blocks[i];
+      
+      for (let j = 0; j < info.data.length; j++) {
+        if (info.data != 'GENESIS-DATA'){
+
+        let { id, input, outputs } = info.data[j];
+        if( input.address == publicKey || outputs[0].address == publicKey){
+          idTransactions.push(id);
+        }
+        }
+      }
+    }
+
+    return { socket, publicKey, balance, idTransactions};
+  }
+
 
 }
 
