@@ -50,7 +50,7 @@ class Transaction {
 
     if (amount > senderOutput.amount) throw Error(`Amount: ${amount} exceeds balance`);
 
-    senderOutput.amount -= amount;
+    //senderOutput.amount -= amount;
     this.outputs.push({ amount, address: recipientAdress });
     this.input = Transaction.sign(this, senderWallet);
 

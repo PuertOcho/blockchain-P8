@@ -2,9 +2,12 @@ import WebSocket from 'ws';
 import Nodo from '../blockchain'
 import Peer from '../blockchain'
 import Wallet from '../wallet';
+import { wallet } from './index'; //añdido
 
 
 const { P2P_PORT = 5000, PEERS } = process.env;
+
+const dataWallet = [];
 
 const MESSAGE = {
   BLOCKS: 'blocks',
@@ -49,7 +52,17 @@ class P2PService {
 
       try {
         if (type === MESSAGE.BLOCKS) blockchain.replace(value);
-        else if (type === MESSAGE.TX) blockchain.memoryPool.addOrUpdate(value);
+        else if (type === MESSAGE.TX) {
+            blockchain.memoryPool.addOrUpdate(value);
+
+            //console.log("primero: ", value.input.address == this.myNodo[1] );
+            //if (value.input.address == this.myNodo[1]) {wallet.update( value.input.address, value.outputs[1].address, Number(value.outputs[1].amount) )}; //añadido
+
+            //console.log("segundo: ",value.outputs[1].address == this.myNodo[1]);
+            //if (value.outputs[1].address == this.myNodo[1]) { wallet.update( value.input.address, value.outputs[1].address, Number(value.outputs[1].amount) )}; //añadido
+            wallet.update( value.input.address, value.outputs[1].address, Number(value.outputs[1].amount) );
+            this.sync();
+          }
         else if (type === MESSAGE.WIPE) blockchain.memoryPool.wipe();
         else if (type === MESSAGE.PEER) { this.replacePeers(value); }
         else if (type === MESSAGE.SETPEERS) { this.replaceSetPeers(value); } //puesto por mi para pruebas
@@ -69,6 +82,9 @@ class P2PService {
 
   sync() {
     const { blockchain: { blocks } } = this;
+    this.myNodo[2] = wallet.balance;// 
+    this.setPeers[0] = this.myNodo;// machacamos el valor que teniamos antes que siempre sera deprecated
+
     this.broadcast(MESSAGE.BLOCKS, blocks);
     this.broadcast(MESSAGE.PEER, this.peers);
     this.broadcast(MESSAGE.SETPEERS, this.setPeers);
