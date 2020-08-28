@@ -2,7 +2,7 @@ import WebSocket from 'ws';
 import Nodo from '../blockchain'
 import Peer from '../blockchain'
 import Wallet from '../wallet';
-import { wallet } from './index'; //añdido
+import { wallet } from './index';
 
 
 const { P2P_PORT = 5000, PEERS } = process.env;
@@ -54,18 +54,12 @@ class P2PService {
         if (type === MESSAGE.BLOCKS) blockchain.replace(value);
         else if (type === MESSAGE.TX) {
             blockchain.memoryPool.addOrUpdate(value);
-
-            //console.log("primero: ", value.input.address == this.myNodo[1] );
-            //if (value.input.address == this.myNodo[1]) {wallet.update( value.input.address, value.outputs[1].address, Number(value.outputs[1].amount) )}; //añadido
-
-            //console.log("segundo: ",value.outputs[1].address == this.myNodo[1]);
-            //if (value.outputs[1].address == this.myNodo[1]) { wallet.update( value.input.address, value.outputs[1].address, Number(value.outputs[1].amount) )}; //añadido
             wallet.update( value.input.address, value.outputs[1].address, Number(value.outputs[1].amount) );
-            this.sync();
-          }
+            this.sync();  
+        }
         else if (type === MESSAGE.WIPE) blockchain.memoryPool.wipe();
         else if (type === MESSAGE.PEER) { this.replacePeers(value); }
-        else if (type === MESSAGE.SETPEERS) { this.replaceSetPeers(value); } //puesto por mi para pruebas
+        else if (type === MESSAGE.SETPEERS) { this.replaceSetPeers(value); }
       } catch (error) {
         console.log(`[ws:message] error ${error}`);
         throw Error(error);
@@ -113,30 +107,16 @@ class P2PService {
   }
 
   replaceSetPeers( newSetPeers ){
-
     const laux = [];
-
-    
-
     //actualizamos las claves publicas que hallan cambiado, asociadas a un Peer y añadimos una lista que nos indicara si este elemento se encuentra en la lista o no.
-    for (let i = 0; i < this.setPeers.length ; i++) {
-      laux.push(this.setPeers[i][0]);
-
-      if( (this.setPeers[i][0] == newSetPeers[0][0]) && (this.setPeers[i][1] != newSetPeers[0][1])){ 
-        this.setPeers[i][1] = newSetPeers[0][1];
-      }
-
-      if( (this.setPeers[i][0] == newSetPeers[0][0]) && (this.setPeers[i][2] != newSetPeers[0][2])){ 
-        
-        this.setPeers[i][2] = newSetPeers[0][2];
-      }
-      
-    }
+    this.setPeers.forEach((peer) => {
+      laux.push(peer.[0]);
+      if( (peer.[0] == newSetPeers[0][0]) && (peer.[1] != newSetPeers[0][1])){ peer.[1] = newSetPeers[0][1]; }
+      if( (peer.[0] == newSetPeers[0][0]) && (peer.[2] != newSetPeers[0][2])){ peer.[2] = newSetPeers[0][2]; }
+    });
 
     if(laux.includes(newSetPeers[0][0]) == false){
-
       this.setPeers.push(newSetPeers[0]);
-        
     }
   }
 
@@ -155,19 +135,17 @@ class P2PService {
         
     });
 
-    for (let i = 0; i < this.blockchain.blocks.length; i++) {
-      let info = this.blockchain.blocks[i];
+    this.blockchain.blocks.forEach((block) => {
       
-      for (let j = 0; j < info.data.length; j++) {
-        if (info.data != 'GENESIS-DATA'){
-
-        let { id, input, outputs } = info.data[j];
-        if( input.address == publicKey || outputs[0].address == publicKey){
-          idTransactions.push(id);
-        }
+      for (let j = 0; j < block.data.length; j++) {
+        if (block.data != 'GENESIS-DATA'){
+          let { id, input, outputs } = block.data[j];
+          if( input.address == publicKey || outputs[0].address == publicKey){
+            idTransactions.push(id);
+          }
         }
       }
-    }
+    });
 
     return { socket, publicKey, balance, idTransactions};
   }
