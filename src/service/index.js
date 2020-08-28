@@ -23,10 +23,10 @@ const miner = new Miner(blockchain, p2pService, walletMiner);
 
 
 /////////////////////////////////////////////////////////////
-////  para poder inicializar el nodo principal
+////  para poder inicializar el nodo principal             //
 /////////////////////////////////////////////////////////////
-
-if(p2pService.peers[0] == `ws:localhost:5000`){
+                                                           
+if(p2pService.peers[0] == `ws:localhost:5000`){            
   p2pService.peers.push(`ws:localhost:${ P2P_PORT }`);
 }
 
@@ -35,45 +35,28 @@ if(p2pService.peers[0] == `ws:localhost:5000`){
 app.use(bodyParser.json());
 
 app.get('/blocks', (req, res) => {
-  //p2pService.myNodo[2] = wallet.balance;
-  //p2pService.setPeers[0] = p2pService.myNodo;
   p2pService.sync();
 
   res.json(blockchain.blocks);
 });
 
 app.get('/nodos', (req, res) => {
-  //p2pService.myNodo[2] = wallet.balance;
-  //p2pService.setPeers[0] = p2pService.myNodo;
   p2pService.sync();
 
   res.json(p2pService.peers);
 });
 
 app.get('/peers', (req, res) => {
-  
-  //p2pService.myNodo[2] = wallet.balance;
-  //p2pService.setPeers[0] = p2pService.myNodo;
   p2pService.sync();
   
-
-
   res.json(p2pService.setPeers);
 });
 
 app.get('/wallet', (req, res) => {
-  //p2pService.myNodo[2] = wallet.balance;
-  //p2pService.setPeers[0] = p2pService.myNodo;
   p2pService.sync();
 
   res.json(wallet.toString());
 });
-
-/*
-app.get('/nodo', (req, res) => {
-  res.json( p2pService.myNodo );
-});
-*/
 
 app.post('/nodo', (req, res) => {
   const { body: { publicKey } } = req;
@@ -110,13 +93,7 @@ app.get('/transactions', (req, res) => {
 });
 
 app.post('/transaction', (req, res) => {
-/*
-  p2pService.myNodo[2] = wallet.balance;
-  p2pService.setPeers[0] = p2pService.myNodo;
-  p2pService.sync();
-*/
   
-
   const { body: { recipient, amount } } = req;
 
   try {
@@ -132,9 +109,6 @@ app.post('/transaction', (req, res) => {
 });
 
 app.get('/mine/transactions', (req, res) => {
-
-  //p2pService.myNodo[2] = wallet.balance;
-  //p2pService.setPeers[0] = p2pService.myNodo;
   p2pService.sync();
 
   try {

@@ -33,9 +33,6 @@ class Wallet {
     } else {
 
       tx = Transaction.create(this, recipientAddress, amount);
-
-      //this.balance-=amount;//añadidos
-
       
       memoryPool.addOrUpdate(tx);
     }
@@ -78,14 +75,9 @@ class Wallet {
 
   update( senderAddress, recipientAddress, amount ){
     
-
-    if (senderAddress == this.publicKey) { 
-      this.balance -= (amount/2);
-      console.log('hola 1 ');//
-    }else if (recipientAddress == this.publicKey){ 
-      this.balance += (amount/2);
-      console.log('hola 2 ');//
-    }
+    if (senderAddress == this.publicKey)  this.balance -= (amount/2);
+    if (recipientAddress == this.publicKey) this.balance += (amount/2);
+    
 
   }
 
